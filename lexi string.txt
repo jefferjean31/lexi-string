@@ -1,0 +1,53 @@
+#include<stdio.h>
+int isAnagram(char *str,char *first,int len,int lenAnagram)
+{
+  int fixedCount[26]={0},windowCount[26]={0},index,startIndex;
+  for(index=0;index<lenAnagram;index++)
+  {
+    fixedCount[first[index]-97]++;
+    windowCount[str[index]-97]++;
+  }
+  for(startIndex=0;startIndex+lenAnagram-1<len;startIndex++)
+  {
+    int flag=0;
+    for(index=0;index<lenAnagram;index++)
+    {
+      int reqdIndex=first[index]-97;
+      if(fixedCount[reqdIndex]!=windowCount[reqdIndex])
+      {
+        flag=1;
+        break;
+      }
+    }
+    if(flag==0)
+      return 1;
+    windowCount[str[startIndex]-97]--;
+    if(str[startIndex+lenAnagram]!=NULL)
+      windowCount[str[startIndex+lenAnagram]-97]++;//next character
+  }
+  return 0;
+}
+int main()
+{
+  char str[31],firstCharArray[11];
+  int q,itr,fIndex=0,n;
+  scanf("%s",str);
+  scanf("%d",&q);
+  for(n=0;str[n]!=NULL;n++);
+  for(itr=1;itr<=q;itr++)
+  {
+    char direction;
+    int magnitude;
+    scanf("\n%c %d",&direction,&magnitude);
+    if(direction=='L')
+      firstCharArray[fIndex++]=str[(magnitude)%n];
+    if(direction=='R')
+      firstCharArray[fIndex++]=str[(n-magnitude)%n];
+  }
+  firstCharArray[fIndex]=NULL;
+  if(isAnagram(str,firstCharArray,n,q)==1)
+    printf("YES");
+  else
+    printf("NO");
+  return 0;
+}
